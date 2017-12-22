@@ -1,0 +1,18 @@
+environment:
+  matrix:
+    - PYTHON: "C:\\Python27"
+      TOXENV: py27
+    - PYTHON: "C:\\Python36"
+      TOXENV: py36
+    - PYTHON: "C:\\Python36"
+      TOXENV: pep8
+    - PYTHON: "C:\\Python36"
+      TOXENV: mypy
+
+install:
+    - "C:\\Python36\\Scripts\\pip install tox"
+
+build: false
+
+test_script:
+    - "C:\\Python36\\Scripts\\tox"
