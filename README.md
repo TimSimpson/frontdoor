@@ -1,6 +1,6 @@
 # Front Door
 
-[![Build Status](https://travis-ci.org/TimSimpson/frontdoor.svg?branch=mas)](https://travis-ci.org/TimSimpson/frontdoor)
+[![Build Status](https://travis-ci.org/TimSimpson/frontdoor.svg?branch=mas)](https://travis-ci.org/TimSimpson/frontdoor) [![Build status](https://ci.appveyor.com/api/projects/status/dfwa2mv8wskx6x6r?svg=true)](https://ci.appveyor.com/project/TimSimpson/frontdoor)
 
 This simple module aids in the creation of "front door" scripts, which can
 help organize automated scripts and reduce the need for overly verbose docs.
