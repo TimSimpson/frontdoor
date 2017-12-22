@@ -64,6 +64,7 @@ def help(args):
         with open(frontdoor.from_root('README.md'), 'r') as file:
             print(file.read())
 
+
 if __name__ == "__main__":
     # Fix goofy bug when using Windows command prompt to ssh into Vagrant box
     # that puts \r into the strings.

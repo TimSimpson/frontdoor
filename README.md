@@ -16,7 +16,7 @@ different is that you just document it's available and users can find other
 options by jumping in and exploring it themselves. The end result feels a
 little like playing an interactive fiction computer game such as Zork.
 
-This solves a different usecase from argparse as argparse is more about
+This solves a different use case from argparse as argparse is more about
 creating robust, single purpose tools that can be invoked in flexible ways,
 where as Front Door is about creating scripts that more easily accept positional
 arguments and can defer to other commands. It's also extremely simple and

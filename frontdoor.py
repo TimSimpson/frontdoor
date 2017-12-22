@@ -17,17 +17,27 @@ License
 -------
 Written in 2017 by Tim Simpson
 
-To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
+To the extent possible under law, the author(s) have dedicated all copyright
+and related and neighboring rights to this software to the public domain
+worldwide. This software is distributed without any warranty.
 
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+You should have received a copy of the CC0 Public Domain Dedication along with
+this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 """
+from __future__ import print_function
+
 import os
 
 
-ROOT=os.path.dirname(os.path.realpath(__file__))
+ROOT = os.path.dirname(os.path.realpath(__file__))
+
+
+if False:  # This works thanks to MyPy's Python 2 compatibility mode.
+    import typing as t  # NOQA
 
 
 def from_root(path):
+    # type: (str) -> str
     """Returns a path relative to the root directory."""
     if os.name == 'nt':
         path = path.replace('/', '\\')
@@ -41,24 +51,38 @@ class CommandRegistry(object):
     """
 
     def __init__(self, name):
-        self.commands = {}
+        # type: (str) -> None
+        self.commands = {}  # type: dict
         self.name = name
         # Adds a help function - this can be overwritten.
         self.decorate('help')(lambda args: self.help(args))
 
     def decorate(self, name, desc='', help=None):
+        # type: (t.Union[str, t.List[str]], str, t.Optional[str]) -> t.Callable
         """Decorates a function to make it a command."""
         def cb(func):
-            self.commands[name] = {
-                'fn': func,
-                'desc': desc,
-                'help': help,
-            }
+            # type: (t.Callable) -> t.Callable
+            if isinstance(name, str):
+                names = [name]
+                visible_name = name
+            else:
+                names = name
+                visible_name = ','.join(names)
+
+            for index, key in enumerate(names):
+                self.commands[key] = {
+                    'fn': func,
+                    'desc': desc,
+                    'help': help,
+                    'show': index == 0,
+                    'visible_name': visible_name,
+                }
             return func
 
         return cb
 
     def dispatch(self, args):
+        # type: (t.List[str]) -> int
         """Pass in sys.argv or something equivalent."""
         if len(args) < 1:
             print("Expected argument.")
@@ -77,12 +101,17 @@ class CommandRegistry(object):
             else:
                 print('I know not of this command "{}".'.format(command))
             print()
-            self.help(args)
+            self.help([])
             return 1
-        return fn['fn'](rest)
+        exit_code = fn['fn'](rest)
+        if exit_code is None:
+            return 0
+        return exit_code
 
     def help(self, args):
+        # type: (t.List[str]) -> int
         """Offers help."""
+        bad_command = False
         if len(args) > 0:
             name = args[0]
             command = self.commands.get(name)
@@ -93,19 +122,28 @@ class CommandRegistry(object):
                 print()
                 if command['help']:
                     print(command['help'])
-                else:
-                    print('(No help defined for "{}".)'.format(name))
-                return
+                    print()
+                return 0
             else:
+                bad_command = True
                 print('Unknown command "{}".'.format(name))
 
         # Print out all commands
 
-        print('Available options for {}:'.format(self.name))
-        max_name = max(len(name) for name in self.commands.keys())
+        if self.name:
+            print('Available options for {}:'.format(self.name))
+        else:
+            print('Available options:')
+        max_name = max(len(values['visible_name'])
+                       for values in self.commands.values())
         max_spacing = max(max_name, 16)
 
-        for name, value in sorted(self.commands.items(), key=lambda kv: kv[0]):
-            print("    {}{}{}".format(
-                name, ' ' * (max_spacing - len(name)), value['desc']))
+        for value in sorted(self.commands.values(),
+                            key=lambda v: v['visible_name']):
+            if value['show']:
+                print("    {}{}{}".format(
+                    value['visible_name'],
+                    ' ' * (max_spacing - len(value['visible_name'])),
+                    value['desc']).rstrip())
 
+        return 0 if not bad_command else 1
