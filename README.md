@@ -1,5 +1,7 @@
 # Front Door
 
+[![Build Status](https://travis-ci.org/TimSimpson/frontdoor.svg?branch=mas)](https://travis-ci.org/TimSimpson/frontdoor)
+
 This simple module aids in the creation of "front door" scripts, which can
 help organize automated scripts and reduce the need for overly verbose docs.
 The idea is you can copy `frontdoor.py` into your repository to make it easy
