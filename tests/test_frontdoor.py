@@ -12,7 +12,8 @@ def test_from_root(monkeypatch):
     assert ('~root~\\a\\b\\c' == frontdoor.from_root('a/b/c')
             or '~root~/a\\b\\c' == frontdoor.from_root('a/b/c'))
     monkeypatch.setattr(os, 'name', 'linux')
-    assert '~root~/a/b/c' == frontdoor.from_root('a/b/c')
+    assert ('~root~\\a/b/c' == frontdoor.from_root('a/b/c')
+            or '~root~/a/b/c' == frontdoor.from_root('a/b/c'))
 
 
 def assert_silence(capsys):
