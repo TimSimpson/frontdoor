@@ -11,7 +11,7 @@ with open(os.path.join(ROOT, 'README.rst')) as file:
 
 setuptools.setup(
     name='frontdoor',
-    version='0.1.0',
+    version='0.1.1',
     summary='Aids the creation of "front door" scripts.',
     description=description,
     author='Tim Simpson',
