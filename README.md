@@ -37,10 +37,13 @@ Let's create a file named `ci.py` in the root of your repo:
 
 ```py3
 import argparse
-import os
 import pathlib
+import shutil
 import subprocess
 import sys
+import textwrap
+# `frontdoor` supports both MyPy type annotations and Python 2
+import typing as t
 
 import frontdoor
 
@@ -60,8 +63,10 @@ def clean() -> None:
     # If `None` is returned, then frontdoor returns zero, unless there's
     # an unhandled exception
 
+
 # The third arg to `cmd` can be advanced help seen when the command is passed
 # to frontdoor's built in `help` command.
+
 
 @cmd('run', 'Runs a built program', 'Runs a program in the `output` directory')
 def run(args: t.List[str]) -> int:
@@ -71,16 +76,17 @@ def run(args: t.List[str]) -> int:
         return 1
     prog = pathlib.Path('output') / args[0]
     rest = args[1:]
-    result = subprocess.run([prog] + rest)
+    result = subprocess.run([str(prog)] + rest)
     return result.returncode
+
 
 @cmd('build', 'Builds a target', 'Calls the compiler')
 def build(args: t.List[str]) -> None:
     # Let's assume this subcommand is complex or becomes complex. In that case
     # busting out argparse is recommended.
-    parser = argparse.Parser('Builder')
+    parser = argparse.ArgumentParser('Builder')
     # assume more work goes into building out "parser" here, then-
-    p_args = parser.parse_args(args)  # just pass `args` into argparse
+    p_args = parser.parse_args(args)  # just pass `args` into argparse  # NOQA
     # do whatever you need with p_args
 
 
@@ -93,7 +99,7 @@ def help(args: t.List[str]) -> None:
     print(
         textwrap.dedent(
             """
-         <insert lame ascii art logo here>
+         Root CI script for project
         """
         )
     )
@@ -122,4 +128,5 @@ Available options for ci:
     c,clean         Destroys any build artifacts
     help            What's all this about?
     run             Runs a built program
+
 ```
