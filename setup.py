@@ -13,7 +13,14 @@ setuptools.setup(
     name='frontdoor',
     version='0.1.3',
     description='Aids the creation of "front door" scripts.',
-    long_description=description,
+    long_description="""
+This simple module aids in the creation of "front door" scripts, which
+can help organize automated scripts and reduce the need for overly
+verbose docs.
+
+See `the git repo
+<https://github.com/TimSimpson/frontdoor>`_ for more info.
+    """,
     author='Tim Simpson',
     license='MIT',
     py_modules=['frontdoor'],
