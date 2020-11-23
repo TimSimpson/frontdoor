@@ -1,13 +1,15 @@
-Front Door
-==========
+# Front Door
 
-|Build Status| |Build status|
+[![Travis Build Status](https://travis-ci.org/TimSimpson/frontdoor.svg?branch=master)](https://travis-ci.org/TimSimpson/frontdoor)
+[![Build status](https://ci.appveyor.com/api/projects/status/vqcmfp6sflj902o7/branch/master?svg=true)](https://ci.appveyor.com/project/TimSimpson/frontdoor/branch/master)
+[![PyPi](https://img.shields.io/pypi/v/frontdoor)](https://pypi.org/project/frontdoor)
+[Change Log](changelog.md)
 
 This simple module aids in the creation of "front door" scripts, which
 can help organize automated scripts and reduce the need for overly
-verbose docs. The idea is you can copy ``frontdoor.py`` into your
-repository to make it easy to bootstrap a front door script of your own
-(the other files in this repo are just examples that illustrate how
+verbose docs. The idea is you can copy `frontdoor/__init__.py` into your
+repository as `frontdoor.py` to make it easy to bootstrap a front door script
+of your own. The [example](example.py) files in this repo illustrate how
 frontdoor.py is used).
 
 A front door script is a command which accepts a series of options which
@@ -27,8 +29,3 @@ creating robust, single purpose tools that can be invoked in flexible
 ways, where as Front Door is about creating scripts that more easily
 accept positional arguments and can defer to other commands. It's also
 extremely simple and designed to be copy and pasted.
-
-.. |Build Status| image:: https://travis-ci.org/TimSimpson/frontdoor.svg?branch=mas
-   :target: https://travis-ci.org/TimSimpson/frontdoor
-.. |Build status| image:: https://ci.appveyor.com/api/projects/status/dfwa2mv8wskx6x6r?svg=true
-   :target: https://ci.appveyor.com/project/TimSimpson/frontdoor

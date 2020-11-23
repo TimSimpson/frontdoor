@@ -17,4 +17,7 @@ setuptools.setup(
     author='Tim Simpson',
     license='MIT',
     py_modules=['frontdoor'],
+    package_data={"frontdoor": ["frontdoor/py.typed", "frontdoor/__init__.pyi"]}
 )
+
+
