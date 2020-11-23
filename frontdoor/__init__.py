@@ -26,7 +26,9 @@ this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 """
 from __future__ import print_function
 
+import inspect
 import os
+import sys
 
 
 ROOT = os.path.dirname(os.path.realpath(__file__))
@@ -44,6 +46,16 @@ def from_root(path):
     return os.path.join(ROOT, path)
 
 
+def _get_param_count(func):
+    # type: (t.Callable) -> int
+    if sys.version_info[0] >= 3:  # python 3:
+        sig = inspect.signature(func)
+        return len(sig.parameters)
+    else:  # python 2
+        args = inspect.getargspec(func)
+        return len(args.args or []) + len(args.varargs or [])
+
+
 class CommandRegistry(object):
     """
     Organizes commands, which are simple functions associated with a name and
@@ -58,10 +70,8 @@ class CommandRegistry(object):
         self.decorate('help')(lambda args: self.help(args))
 
     def decorate(self, name, desc='', help=None):
-        # type: (t.Union[str, t.List[str]], str, t.Optional[str]) -> t.Callable
         """Decorates a function to make it a command."""
         def cb(func):
-            # type: (t.Callable) -> t.Callable
             if isinstance(name, str):
                 names = [name]
                 visible_name = name
@@ -103,7 +113,17 @@ class CommandRegistry(object):
             print()
             self.help([])
             return 1
-        exit_code = fn['fn'](rest)
+
+        params = _get_param_count(fn['fn'])
+        if params == 0:
+            if len(rest) > 0:
+                print('Command "{}" takes no arguments'.format(command))
+                return 1
+
+            exit_code = fn['fn']()
+        else:
+            exit_code = fn['fn'](rest)
+
         if exit_code is None:
             return 0
         return exit_code

@@ -5,7 +5,7 @@ import setuptools
 
 
 ROOT = os.path.join(os.path.dirname(os.path.realpath(__file__)))
-with open(os.path.join(ROOT, 'README.rst')) as file:
+with open(os.path.join(ROOT, 'README.md')) as file:
     description = file.read()
 
 
@@ -17,4 +17,7 @@ setuptools.setup(
     author='Tim Simpson',
     license='MIT',
     py_modules=['frontdoor'],
+    package_data={
+        "frontdoor": ["frontdoor/py.typed", "frontdoor/__init__.pyi"]
+    }
 )
