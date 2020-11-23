@@ -26,14 +26,9 @@ this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 """
 from __future__ import print_function
 
+import inspect
 import os
 import sys
-
-import inspect
-if sys.version_info[0] < 3:
-    pass
-else:
-    import inspect
 
 
 ROOT = os.path.dirname(os.path.realpath(__file__))
@@ -121,6 +116,10 @@ class CommandRegistry(object):
 
         params = _get_param_count(fn['fn'])
         if params == 0:
+            if len(rest) > 0:
+                print('Command "{}" takes no arguments'.format(command))
+                return 1
+
             exit_code = fn['fn']()
         else:
             exit_code = fn['fn'](rest)

@@ -40,7 +40,7 @@ def calc(args):
         '+': lambda x, y: x + y,
         '*': lambda x, y: x * y
     }
-    print("RESULT={}".format(ops[ap_args.op](ap_args.x, ap_args.y)))  # type: ignore
+    print("RESULT={}".format(ops[ap_args.op](ap_args.x, ap_args.y)))  # type: ignore  # NOQA
 
 
 @cmd('hello', 'Says hello. Notice this takes no args.')
@@ -63,7 +63,9 @@ def subproject(args):
     return subproject.REGISTRY.dispatch(args)
 
 
-@cmd('help', "What's all this about?")
+@cmd('help', "What's all this about?",
+     "Whoa. You want to see help about the help itself?\n"
+     "... I don't know what to do. I feel so lost.")
 def help(args):
     # type: (t.List[str]) -> None
     # The CommandRegistry class already defines a version of `help`
@@ -74,7 +76,7 @@ def help(args):
     REGISTRY.help(args)
     if len(args) == 0:
         print()
-        with open(frontdoor.from_root('README.md'), 'r') as file:
+        with open(frontdoor.from_root('../README.md'), 'r') as file:
             print(file.read())
 
 

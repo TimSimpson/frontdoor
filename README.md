@@ -33,6 +33,8 @@ extremely simple and designed to be copy and pasted.
 
 ## Example
 
+Let's create a file named `ci.py` in the root of your repo:
+
 ```py3
 import argparse
 import os
@@ -47,12 +49,19 @@ REGISTRY = frontdoor.CommandRegistry('ci')
 cmd = REGISTRY.decorate
 
 
-@cmd('clean', 'Destroys any build artifacts')
+# Creates a subcommand that can be invoked using either `c` or `clean`
+# The second argument is the description which is shown when frontdoor lists
+# all commands.
+
+@cmd(['c', 'clean'], 'Destroys any build artifacts')
 def clean() -> None:
     # `frontdoor` has it's own type annotations, but supports Python 2 as well
     shutil.rmtree('output')
     # If `None` is returned, then frontdoor returns zero, unless there's
     # an unhandled exception
+
+# The third arg to `cmd` can be advanced help seen when the command is passed
+# to frontdoor's built in `help` command.
 
 @cmd('run', 'Runs a built program', 'Runs a program in the `output` directory')
 def run(args: t.List[str]) -> int:
@@ -75,6 +84,23 @@ def build(args: t.List[str]) -> None:
     # do whatever you need with p_args
 
 
+# While frontdoor automatically adds a `help` command, you can override it
+# if you want.
+@cmd("help", desc="What's all this about?",
+     help="Whoa. You want to see help about the help itself?\n"
+          "... I don't know what to do. I feel so lost.")
+def help(args: t.List[str]) -> None:
+    print(
+        textwrap.dedent(
+            """
+         <insert lame ascii art logo here>
+        """
+        )
+    )
+    # Then just use frontdoor's default help mechanism
+    REGISTRY.help(args)
+
+
 def main() -> None:
     # Fix goofy bug when using Windows command prompt to ssh into Vagrant box
     # that puts \r into the strings.
@@ -84,4 +110,16 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+```
+
+Assuming `frontdoor` is available (either by vendoring it or installing it with pip) running `python ci.py` shows the following:
+
+```bash
+$ python ci.py
+Expected argument.
+Available options for ci:
+    build           Builds a target
+    c,clean         Destroys any build artifacts
+    help            What's all this about?
+    run             Runs a built program
 ```

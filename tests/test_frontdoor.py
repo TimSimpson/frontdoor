@@ -40,11 +40,16 @@ class TestCommandRegistry(object):
         def remember_args(args):
             self._remembered_args = args
 
+        @cmd('zero-arg', 'Zero arg command')
+        def zero_arg():
+            self._remembered_args = None
+
     EXPECTED_HELP = textwrap.dedent("""\
             {}
                 arg-to-number   Converts arg 1 to exit code.
                 help
                 r,remember_args
+                zero-arg        Zero arg command
             """)
 
     @pytest.fixture
@@ -139,3 +144,16 @@ class TestCommandRegistry(object):
         assert ['a', 'b', 'c'] == self._remembered_args
         assert 0 == exit_code
         assert_silence(capsys)
+
+    def test_zero_arg_func(self, capsys):
+        exit_code = self.registry.dispatch(['zero-arg'])
+        assert self._remembered_args is None
+        assert 0 == exit_code
+        assert_silence(capsys)
+
+    def test_zero_arg_func_with_an_arg(self, capsys):
+        exit_code = self.registry.dispatch(['zero-arg', 'an-arg'])
+        assert 1 == exit_code
+        out, err = capsys.readouterr()
+        assert 'Command "zero-arg" takes no arguments' in out
+        assert '' == err
