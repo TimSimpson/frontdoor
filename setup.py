@@ -11,7 +11,7 @@ with open(os.path.join(ROOT, 'README.md')) as file:
 
 setuptools.setup(
     name='frontdoor',
-    version='0.1.3',
+    version='0.1.5',
     description='Aids the creation of "front door" scripts.',
     long_description="""
 This simple module aids in the creation of "front door" scripts, which
@@ -23,8 +23,8 @@ See `the git repo
     """,
     author='Tim Simpson',
     license='MIT',
-    py_modules=['frontdoor'],
+    packages=['frontdoor'],
     package_data={
-        "frontdoor": ["frontdoor/py.typed", "frontdoor/__init__.pyi"]
+        "": ["py.typed", "*.pyi"],
     }
 )

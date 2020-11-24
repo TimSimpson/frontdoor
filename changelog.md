@@ -1,6 +1,6 @@
 # Change Log
 
-### 0.1.3 2020-11-23
+### 0.1.5 2020-11-23
 
 MyPy type annotation support was added. Type annotations always existed in the code, but I only recently discovered MyPy doesn't pick them up for packages unless `py.typed` is added to the distribution. Ugh.
 
